@@ -14,10 +14,13 @@ def home():
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
     if request.method == "GET":
-        verify_token = "amuletring.store"
+        verify_token = "amuletring_token"  # ✅ ঠিক টোকেন এখানে দিন
         mode = request.args.get("hub.mode")
         token = request.args.get("hub.verify_token")
         challenge = request.args.get("hub.challenge")
+
+        print(f"GET Verification Attempt: mode={mode}, token={token}, expected={verify_token}")
+
         if mode and token:
             if mode == "subscribe" and token == verify_token:
                 return challenge, 200
@@ -25,7 +28,7 @@ def webhook():
                 return "Verification token mismatch", 403
     elif request.method == "POST":
         incoming_data = request.get_json()
-        print("Received message:", incoming_data)
+        print("✅ Received message:", incoming_data)
         return jsonify({"status": "received"}), 200
 
 if __name__ == "__main__":
